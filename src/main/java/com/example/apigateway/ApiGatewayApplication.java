@@ -1,6 +1,7 @@
 package com.example.apigateway;
 
 import com.example.apigateway.zuulFilter.AccessFilter;
+import com.example.apigateway.zuulFilter.ErrorFilter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.SpringCloudApplication;
@@ -19,5 +20,10 @@ public class ApiGatewayApplication {
     @Bean
     public AccessFilter accessFilter(){
         return new AccessFilter();
+    }
+
+    @Bean
+    public ErrorFilter errorFilter(){
+        return new ErrorFilter();
     }
 }

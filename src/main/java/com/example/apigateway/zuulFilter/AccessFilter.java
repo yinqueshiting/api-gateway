@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @description: 继承ZuulFilter
@@ -42,16 +43,28 @@ public class AccessFilter extends ZuulFilter {
     @Override
     public Object run() throws ZuulException {
         RequestContext requestContext = RequestContext.getCurrentContext();
-        HttpServletRequest httpServletRequest = requestContext.getRequest();
-        log.info("send {} request to {}", httpServletRequest.getMethod(),httpServletRequest.getRequestURL());
-        String accessToken = (String)httpServletRequest.getParameter("accessToken");
-        if(StringUtils.isBlank(accessToken)){
-            log.warn("未携带安全验证");
-            requestContext.setSendZuulResponse(false);
-            requestContext.setResponseStatusCode(401);
-            return null;
-        }
-        log.info("接收到的token:{}", accessToken);
+        //try {
+            HttpServletRequest httpServletRequest = requestContext.getRequest();
+            log.info("send {} request to {}", httpServletRequest.getMethod(), httpServletRequest.getRequestURL());
+            String accessToken = (String) httpServletRequest.getParameter("accessToken");
+            if (StringUtils.isBlank(accessToken)) {
+                log.warn("未携带安全验证");
+                requestContext.setSendZuulResponse(false);
+                requestContext.setResponseStatusCode(401);
+                return null;
+            }
+            log.info("接收到的token:{}", accessToken);
+            throwExcetion();
+      /*  }catch (Exception ex){
+            log.info("遭遇到了exception!!!");
+            requestContext.set("error.status_code", HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            requestContext.set("error.exception",ex);
+        }*/
         return null;
+    }
+
+    public void throwExcetion(){
+        log.info("进入throwExcetion（）");
+        throw new RuntimeException("throw runtime exception");
     }
 }
